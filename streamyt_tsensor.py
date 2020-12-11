@@ -51,7 +51,7 @@ try:
                 executor.submit(get_temp, TEMP_DEVICE_PATH)
 
             read_checkpoint = dt.datetime.now()
-        camera.annotate_text = 'CN 360\n' + time_now.strftime('%Y-%m-%d %H:%M:%S') + '\n' + temp_val
+        camera.annotate_text = ' CN 360 \n ' + time_now.strftime('%Y-%m-%d %H:%M:%S') + ' \n ' + temp_val + ' '
         camera.wait_recording(1)
 except Exception as e: 
     print("Exception caught!")
