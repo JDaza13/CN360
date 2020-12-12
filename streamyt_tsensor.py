@@ -6,7 +6,7 @@ import time
 import concurrent.futures
 
 YOUTUBE= 'rtmp://x.rtmp.youtube.com/live2/'
-KEY= 'bsq0-64sf-pu5m-238s-fmc1'
+KEY= '6e2h-q6wu-s0rf-qqfc-7ys9'
 
 H_SIZE = 1920
 V_SIZE = 1080
