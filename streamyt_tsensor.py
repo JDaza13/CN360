@@ -1,9 +1,10 @@
 import subprocess 
-import picamera 
+import picamera
+import concurrent.futures
+
+import warnings
 import time
 import datetime as dt
-import time
-import concurrent.futures
 
 YOUTUBE= 'rtmp://x.rtmp.youtube.com/live2/'
 KEY= '6e2h-q6wu-s0rf-qqfc-7ys9'
@@ -53,15 +54,15 @@ try:
             read_checkpoint = dt.datetime.now()
         camera.annotate_text = ' CN 360 \n ' + time_now.strftime('%Y-%m-%d %H:%M:%S') + ' \n ' + temp_val + ' '
         camera.wait_recording(1)
-except Exception as e: 
-    print("Exception caught!")
-    print(e)
+except Exception as e:
+    warnings.warn("Exception caught!")
+    warnings.warn(e)
 except KeyboardInterrupt: 
     camera.stop_recording() 
 finally: 
     camera.close() 
     stream_pipe.stdin.close() 
     stream_pipe.wait() 
-    print("Camera safely shut down")
+    warnings.warn("Camera safely shut down")
     
 #raspivid -o - -t 0 -vf -hf -fps 30 -b 6000000 | ffmpeg -re -ar 44100 -ac 2 -acodec pcm_s16le -f s16le -ac 2 -i /dev/zero -f h264 -i - -vcodec copy -acodec aac -ab 128k -g 50 -strict experimental -f flv rtmp://x.rtmp.youtube.com/live2/wg4f-bkfq-64at-245d-0h49
