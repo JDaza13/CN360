@@ -18,7 +18,11 @@ TEMP_DEVICE_ID = '28-01193a3ed4e7'
 TEMP_DEVICE_PATH = '/sys/bus/w1/devices/'+TEMP_DEVICE_ID+'/w1_slave'
 TEMP_READ_FREQ_SEC = 10
 
-temp_val = '0'
+temp_val = 'temperature not available'
+
+def is_keyboard_interrupt(exception):
+    return (type(exception) is KeyboardInterrupt
+        or type(exception).__name__ == 'KeyboardInterruptException')
 
 def get_temp(dev_file):
     global temp_val    
@@ -57,12 +61,17 @@ try:
 except Exception as e:
     warnings.warn("Exception caught!")
     warnings.warn(e)
-except KeyboardInterrupt: 
-    camera.stop_recording() 
-finally: 
-    camera.close() 
-    stream_pipe.stdin.close() 
-    stream_pipe.wait() 
-    warnings.warn("Camera safely shut down")
-    
+except Exception as ex:
+    try:
+        if is_keyboard_interrupt(ex):
+            camera.close() 
+            stream_pipe.stdin.close() 
+            stream_pipe.wait() 
+            warnings.warn("Camera safely shut down")
+            raise ex
+        else:
+            warnings.warn("Exception caught!")
+            warnings.warn(e)      
+    except ValueError:
+        warnings.warn(ValueError)    
 #raspivid -o - -t 0 -vf -hf -fps 30 -b 6000000 | ffmpeg -re -ar 44100 -ac 2 -acodec pcm_s16le -f s16le -ac 2 -i /dev/zero -f h264 -i - -vcodec copy -acodec aac -ab 128k -g 50 -strict experimental -f flv rtmp://x.rtmp.youtube.com/live2/wg4f-bkfq-64at-245d-0h49
