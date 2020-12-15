@@ -10,19 +10,9 @@ import datetime as dt
 
 import logging
 
-# Logging config section
-if not os.path.exists('logs/'):
-    os.makedirs('logs/')
-
-logger = logging.getLogger('CN360')
-logger.setLevel(logging.WARN)
-fh = logging.FileHandler('logs/cn360_test.log')
-fh.setLevel(logging.WARN)
-logger.addHandler(fh)
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-fh.setFormatter(formatter)
-logger.addHandler(fh)
-#END Logging config section
+BRAND_LABEL_NAME = 'CN360'
+LOGS_FOLDER_PATH = 'logs/'
+LOGS_FILE_PATH = LOGS_FOLDER_PATH + 'cn360_test.log' 
 
 YOUTUBE= 'rtmp://x.rtmp.youtube.com/live2/'
 KEY= '71d0-buuz-32ub-u2cx-8ga2'
@@ -42,6 +32,19 @@ def is_keyboard_interrupt(exception):
     return (type(exception) is KeyboardInterrupt
         or type(exception).__name__ == 'KeyboardInterruptException')
 
+def config_logs():
+    if not os.path.exists(LOGS_FOLDER_PATH):
+        os.makedirs(LOGS_FOLDER_PATH)
+
+    logger = logging.getLogger(BRAND_LABEL_NAME)
+    logger.setLevel(logging.WARN)
+    fh = logging.FileHandler(LOGS_FILE_PATH)
+    fh.setLevel(logging.WARN)
+    logger.addHandler(fh)
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    fh.setFormatter(formatter)
+    logger.addHandler(fh)
+
 def get_temp(dev_file):
     global temp_val    
     f = open(dev_file,"r")
@@ -52,6 +55,8 @@ def get_temp(dev_file):
         temperature = contents[-1][index+2:]
         cels =float(temperature)/1000
         temp_val = str(cels) + ' C - ' + dt.datetime.now().strftime('%H:%M:%S')
+
+config_logs()
 
 stream_cmd = 'ffmpeg -re -ar 44100 -ac 2 -loglevel warning -acodec pcm_s16le -f s16le -ac 2 -i /dev/zero -f h264 -thread_queue_size 64 -i - -vcodec copy -acodec aac -ab 128k -g 50 -strict experimental -f flv ' + YOUTUBE + KEY 
 stream_pipe = subprocess.Popen(stream_cmd, shell=True, stdin=subprocess.PIPE) 
@@ -74,7 +79,7 @@ try:
                 executor.submit(get_temp, TEMP_DEVICE_PATH)
 
             read_checkpoint = dt.datetime.now()
-        camera.annotate_text = ' CN 360 \n ' + time_now.strftime('%Y-%m-%d %H:%M:%S') + ' \n ' + temp_val + ' '
+        camera.annotate_text = ' CN360 \n ' + time_now.strftime('%Y-%m-%d %H:%M:%S') + ' \n ' + temp_val + ' '
         camera.wait_recording(1)
 except Exception as ex:
     try:
