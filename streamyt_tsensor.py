@@ -10,6 +10,8 @@ import datetime as dt
 
 import logging
 
+logger = None
+
 BRAND_LABEL_NAME = 'CN360'
 LOGS_FOLDER_PATH = 'logs/'
 LOGS_FILE_PATH = LOGS_FOLDER_PATH + 'cn360_test.log' 
@@ -33,6 +35,7 @@ def is_keyboard_interrupt(exception):
         or type(exception).__name__ == 'KeyboardInterruptException')
 
 def config_logs():
+    global logger
     if not os.path.exists(LOGS_FOLDER_PATH):
         os.makedirs(LOGS_FOLDER_PATH)
 
