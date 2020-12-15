@@ -62,7 +62,7 @@ try:
     while True:
         time_now = dt.datetime.now()
         if (time_now - read_checkpoint).seconds > TEMP_READ_FREQ_SEC:
-            
+            logger.warning('Making a new read to the temperature sensor.')
             with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
                 executor.submit(get_temp, TEMP_DEVICE_PATH)
 
