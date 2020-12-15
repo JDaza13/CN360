@@ -10,6 +10,7 @@ import datetime as dt
 
 import logging
 
+# Logging config section
 if not os.path.exists('logs/'):
     os.makedirs('logs/')
 
@@ -21,9 +22,10 @@ logger.addHandler(fh)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 fh.setFormatter(formatter)
 logger.addHandler(fh)
+#END Logging config section
 
 YOUTUBE= 'rtmp://x.rtmp.youtube.com/live2/'
-KEY= '6e2h-q6wu-s0rf-qqfc-7ys9'
+KEY= '71d0-buuz-32ub-u2cx-8ga2'
 
 H_SIZE = 1920
 V_SIZE = 1080
