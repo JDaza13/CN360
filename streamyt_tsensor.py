@@ -6,6 +6,17 @@ import warnings
 import time
 import datetime as dt
 
+import logging
+
+logger = logging.getLogger('log_exaple')
+logger.setLevel(logging.WARN)
+fh = logging.FileHandler('cn360_test.log')
+fh.setLevel(logging.WARN)
+logger.addHandler(fh)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+fh.setFormatter(formatter)
+logger.addHandler(fh)
+
 YOUTUBE= 'rtmp://x.rtmp.youtube.com/live2/'
 KEY= '6e2h-q6wu-s0rf-qqfc-7ys9'
 
@@ -63,12 +74,12 @@ except Exception as ex:
         if is_keyboard_interrupt(ex):
             camera.close() 
             stream_pipe.stdin.close() 
-            stream_pipe.wait() 
-            warnings.warn("Camera safely shut down")
+            stream_pipe.wait()
+            logger.warning('Camera safely shut down')
             raise ex
         else:
-            warnings.warn("Exception caught!")
-            warnings.warn(ex)
+            logger.warning('Exception caught!')
+            logger.warning(ex)
     except ValueError:
-        warnings.warn(ValueError)    
+        logger.warning(ValueError)    
 #raspivid -o - -t 0 -vf -hf -fps 30 -b 6000000 | ffmpeg -re -ar 44100 -ac 2 -acodec pcm_s16le -f s16le -ac 2 -i /dev/zero -f h264 -i - -vcodec copy -acodec aac -ab 128k -g 50 -strict experimental -f flv rtmp://x.rtmp.youtube.com/live2/wg4f-bkfq-64at-245d-0h49
