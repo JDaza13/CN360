@@ -4,7 +4,6 @@ import subprocess
 import picamera
 import concurrent.futures
 
-import warnings
 import time
 import datetime as dt
 
