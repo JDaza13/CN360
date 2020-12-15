@@ -10,7 +10,7 @@ import logging
 
 logger = logging.getLogger('CN360')
 logger.setLevel(logging.WARN)
-fh = logging.FileHandler('cn360_test.log')
+fh = logging.FileHandler('logs/cn360_test.log')
 fh.setLevel(logging.WARN)
 logger.addHandler(fh)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
