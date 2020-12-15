@@ -58,9 +58,6 @@ try:
             read_checkpoint = dt.datetime.now()
         camera.annotate_text = ' CN 360 \n ' + time_now.strftime('%Y-%m-%d %H:%M:%S') + ' \n ' + temp_val + ' '
         camera.wait_recording(1)
-except Exception as e:
-    warnings.warn("Exception caught!")
-    warnings.warn(e)
 except Exception as ex:
     try:
         if is_keyboard_interrupt(ex):
@@ -71,7 +68,7 @@ except Exception as ex:
             raise ex
         else:
             warnings.warn("Exception caught!")
-            warnings.warn(ex)      
+            warnings.warn(ex)
     except ValueError:
         warnings.warn(ValueError)    
 #raspivid -o - -t 0 -vf -hf -fps 30 -b 6000000 | ffmpeg -re -ar 44100 -ac 2 -acodec pcm_s16le -f s16le -ac 2 -i /dev/zero -f h264 -i - -vcodec copy -acodec aac -ab 128k -g 50 -strict experimental -f flv rtmp://x.rtmp.youtube.com/live2/wg4f-bkfq-64at-245d-0h49
