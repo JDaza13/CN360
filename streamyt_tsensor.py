@@ -8,7 +8,7 @@ import datetime as dt
 
 import logging
 
-logger = logging.getLogger('log_exaple')
+logger = logging.getLogger('CN360')
 logger.setLevel(logging.WARN)
 fh = logging.FileHandler('cn360_test.log')
 fh.setLevel(logging.WARN)
