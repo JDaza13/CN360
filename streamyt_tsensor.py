@@ -17,7 +17,7 @@ LOGS_FOLDER_PATH = 'logs/'
 LOGS_FILE_PATH = LOGS_FOLDER_PATH + 'cn360_test.log' 
 
 YOUTUBE= 'rtmp://x.rtmp.youtube.com/live2/'
-KEY= '71d0-buuz-32ub-u2cx-8ga2'
+KEY= 'sba9-c20m-veae-eupe-76z4'
 
 H_SIZE = 1920
 V_SIZE = 1080
