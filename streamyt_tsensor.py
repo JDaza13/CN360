@@ -1,3 +1,5 @@
+import os, os.path
+
 import subprocess 
 import picamera
 import concurrent.futures
@@ -7,6 +9,9 @@ import time
 import datetime as dt
 
 import logging
+
+if not os.path.exists('logs/'):
+    os.makedirs('logs/')
 
 logger = logging.getLogger('CN360')
 logger.setLevel(logging.WARN)
