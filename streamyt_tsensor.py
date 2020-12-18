@@ -60,40 +60,45 @@ def get_temp(dev_file):
 
 config_logs()
 
-stream_cmd = 'ffmpeg -re -ar 44100 -ac 2 -loglevel warning -acodec pcm_s16le -f s16le -ac 2 -i /dev/zero -f h264 -thread_queue_size 64 -i - -vcodec copy -acodec aac -ab 128k -g 50 -strict experimental -f flv ' + YOUTUBE + KEY 
-stream_pipe = subprocess.Popen(stream_cmd, shell=True, stdin=subprocess.PIPE) 
-camera = picamera.PiCamera(resolution=(H_SIZE, V_SIZE), framerate=FRAME_RATE)
-camera.annotate_background = picamera.Color('black')
+def main_stream():
 
-try: 
-    now = time.strftime("%Y-%m-%d-%H:%M:%S")
-    camera.framerate = FRAME_RATE 
-    camera.vflip = True 
-    camera.hflip = True
-    camera.start_preview(fullscreen=False, window = (800, 20, 640, 480))
-    camera.start_recording(stream_pipe.stdin, format='h264', bitrate = BITRATE)
-    read_checkpoint = dt.datetime.now()
-    while True:
-        time_now = dt.datetime.now()
-        if (time_now - read_checkpoint).seconds > TEMP_READ_FREQ_SEC:
-            logger.warning('Making a new read to the temperature sensor.')
-            with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
-                executor.submit(get_temp, TEMP_DEVICE_PATH)
+    stream_cmd = 'ffmpeg -re -ar 44100 -ac 2 -loglevel warning -acodec pcm_s16le -f s16le -ac 2 -i /dev/zero -f h264 -thread_queue_size 64 -i - -vcodec copy -acodec aac -ab 128k -g 50 -strict experimental -f flv ' + YOUTUBE + KEY 
+    stream_pipe = subprocess.Popen(stream_cmd, shell=True, stdin=subprocess.PIPE) 
+    camera = picamera.PiCamera(resolution=(H_SIZE, V_SIZE), framerate=FRAME_RATE)
+    camera.annotate_background = picamera.Color('black')
 
-            read_checkpoint = dt.datetime.now()
-        camera.annotate_text = ' CN360 \n ' + time_now.strftime('%Y-%m-%d %H:%M:%S') + ' \n ' + temp_val + ' '
-        camera.wait_recording(1)
-except Exception as ex:
-    try:
+    try: 
+        now = time.strftime("%Y-%m-%d-%H:%M:%S")
+        camera.framerate = FRAME_RATE 
+        camera.vflip = True 
+        camera.hflip = True
+        camera.start_preview(fullscreen=False, window = (800, 20, 640, 480))
+        camera.start_recording(stream_pipe.stdin, format='h264', bitrate = BITRATE)
+        read_checkpoint = dt.datetime.now()
+        while True:
+            time_now = dt.datetime.now()
+            if (time_now - read_checkpoint).seconds > TEMP_READ_FREQ_SEC:
+                logger.warning('Making a new read to the temperature sensor.')
+                with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
+                    executor.submit(get_temp, TEMP_DEVICE_PATH)
+
+                read_checkpoint = dt.datetime.now()
+            camera.annotate_text = ' CN360 \n ' + time_now.strftime('%Y-%m-%d %H:%M:%S') + ' \n ' + temp_val + ' '
+            camera.wait_recording(1)
+    except Exception as ex:
         if is_keyboard_interrupt(ex):
             camera.close() 
             stream_pipe.stdin.close() 
             stream_pipe.wait()
             logger.warning('Camera safely shut down')
-            raise ex
         else:
-            logger.warning('Exception caught!')
             logger.warning(ex)
-    except ValueError:
-        logger.warning(ValueError)    
+            logger.warning('Exception caught, rebooting stream...')
+            camera.close() 
+            stream_pipe.stdin.close() 
+            stream_pipe.wait()
+            logger.warning('Camera safely shut down')
+            time.sleep(2)
+            main_stream()
+main_stream()
 #raspivid -o - -t 0 -vf -hf -fps 30 -b 6000000 | ffmpeg -re -ar 44100 -ac 2 -acodec pcm_s16le -f s16le -ac 2 -i /dev/zero -f h264 -i - -vcodec copy -acodec aac -ab 128k -g 50 -strict experimental -f flv rtmp://x.rtmp.youtube.com/live2/wg4f-bkfq-64at-245d-0h49
