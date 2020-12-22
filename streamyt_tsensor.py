@@ -41,9 +41,9 @@ def config_logs():
         os.makedirs(LOGS_FOLDER_PATH)
 
     logger = logging.getLogger(BRAND_LABEL_NAME)
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(logging.INFO)
     fh = logging.FileHandler(LOGS_FILE_PATH)
-    fh.setLevel(logging.DEBUG)
+    fh.setLevel(logging.INFO)
     logger.addHandler(fh)
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     fh.setFormatter(formatter)
@@ -64,7 +64,9 @@ config_logs()
 
 def main_stream():
 
-    stream_cmd = 'ffmpeg -re -ar 44100 -ac 2 -loglevel debug -acodec pcm_s16le -f s16le -ac 2 -i /dev/zero -f h264 -thread_queue_size 64 -i - -vcodec copy -acodec aac -ab 128k -g 50 -strict experimental -f flv ' + YOUTUBE + KEY 
+    logger.warning('Starting stream at: ' + dt.datetime.now().strftime('%H:%M:%S'))
+
+    stream_cmd = 'ffmpeg -re -ar 44100 -ac 2 -loglevel info -acodec pcm_s16le -f s16le -ac 2 -i /dev/zero -f h264 -thread_queue_size 64 -i - -vcodec copy -acodec aac -ab 128k -g 50 -strict experimental -f flv ' + YOUTUBE + KEY 
     stream_pipe = subprocess.Popen(stream_cmd, shell=True, stdin=subprocess.PIPE) 
     camera = picamera.PiCamera(resolution=(H_SIZE, V_SIZE), framerate=FRAME_RATE)
     camera.annotate_background = picamera.Color('black')
