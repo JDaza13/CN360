@@ -98,7 +98,7 @@ def main_stream():
         print(ex)
         print('Exception caught, rebooting stream...')
         camera.stop_recording()        
-        if !is_keyboard_interrupt(ex):
+        if not is_keyboard_interrupt(ex):
             NOT_KEYBOARD_EXCEPTION = True
             #logger.warning('Camera safely shut down')
     finally:
