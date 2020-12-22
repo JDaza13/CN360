@@ -114,7 +114,6 @@ def main_stream():
             stream_pipe.terminate()
             print('Camera safely shut down')
             #logger.warning('Camera safely shut down')
-            time.sleep(3)
             print('About to attempt stream restart...')
             #logger.warning('About to attempt stream restart...')
             main_stream()
