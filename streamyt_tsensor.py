@@ -41,9 +41,9 @@ def config_logs():
         os.makedirs(LOGS_FOLDER_PATH)
 
     logger = logging.getLogger(BRAND_LABEL_NAME)
-    logger.setLevel(logging.INFO)
+    logger.setLevel(logging.DEBUG)
     fh = logging.FileHandler(LOGS_FILE_PATH)
-    fh.setLevel(logging.INFO)
+    fh.setLevel(logging.DEBUG)
     logger.addHandler(fh)
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     fh.setFormatter(formatter)
@@ -101,7 +101,7 @@ def main_stream():
             stream_pipe.stdin.close() 
             stream_pipe.wait()
             logger.warning('Camera safely shut down')
-            time.sleep(2)
+            time.sleep(5)
             main_stream()
 main_stream()
 #raspivid -o - -t 0 -vf -hf -fps 30 -b 6000000 | ffmpeg -re -ar 44100 -ac 2 -acodec pcm_s16le -f s16le -ac 2 -i /dev/zero -f h264 -i - -vcodec copy -acodec aac -ab 128k -g 50 -strict experimental -f flv rtmp://x.rtmp.youtube.com/live2/wg4f-bkfq-64at-245d-0h49
