@@ -67,7 +67,7 @@ def main_stream():
     logger.warning('Starting stream at: ' + dt.datetime.now().strftime('%H:%M:%S'))
 
     stream_cmd = 'ffmpeg -re -ar 44100 -ac 2 -loglevel info -acodec pcm_s16le -f s16le -ac 2 -i /dev/zero -f h264 -thread_queue_size 64 -i - -vcodec copy -acodec aac -ab 128k -g 50 -strict experimental -f flv ' + YOUTUBE + KEY 
-    stream_pipe = subprocess.Popen(stream_cmd, shell=True, stdin=subprocess.PIPE) 
+    stream_pipe = subprocess.Popen(stream_cmd, shell=False, stdin=subprocess.PIPE) 
     camera = picamera.PiCamera(resolution=(H_SIZE, V_SIZE), framerate=FRAME_RATE)
     camera.annotate_background = picamera.Color('black')
 
@@ -93,7 +93,6 @@ def main_stream():
     except Exception as ex:
         if is_keyboard_interrupt(ex):
             camera.stop_recording()
-            time.sleep(1)
             camera.close() 
             stream_pipe.stdin.close() 
             stream_pipe.wait()
@@ -103,7 +102,6 @@ def main_stream():
             logger.warning(ex)
             logger.warning('Exception caught, rebooting stream...')
             camera.stop_recording()
-            time.sleep(1)
             camera.close() 
             stream_pipe.stdin.close() 
             stream_pipe.wait()
