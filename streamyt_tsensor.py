@@ -27,7 +27,7 @@ TEMP_DEVICE_ID = '28-01193a3ed4e7'
 TEMP_DEVICE_PATH = '/sys/bus/w1/devices/'+TEMP_DEVICE_ID+'/w1_slave'
 TEMP_READ_FREQ_SEC = 10
 
-EXCEPTION_THROW_DELAY = 30
+EXCEPTION_THROW_DELAY = 45
 
 temp_val = 'temperature not available'
 
@@ -87,7 +87,11 @@ def main_stream():
 
                 read_checkpoint = dt.datetime.now()
             if (time_now - read_checkpoint).seconds > EXCEPTION_THROW_DELAY:
-                raise ValueError('Force exception to reboot stream')
+                #raise ValueError('Force exception to reboot stream')
+                camera.close() 
+                stream_pipe.stdin.close() 
+                stream_pipe.wait()
+                logger.warning('Camera safely shut down')
             camera.annotate_text = ' CN360 \n ' + time_now.strftime('%Y-%m-%d %H:%M:%S') + ' \n ' + temp_val + ' '
             camera.wait_recording(1)
     except Exception as ex:
