@@ -94,14 +94,16 @@ def main_stream():
             camera.annotate_text = ' CN360 \n ' + time_now.strftime('%Y-%m-%d %H:%M:%S') + ' \n ' + temp_val + ' '
             camera.wait_recording(1)
     except Exception as ex:
+        print(ex)
+        print('Exception caught, rebooting stream...')
+        camera.stop_recording()
+        '''
         if is_keyboard_interrupt(ex):
             camera.stop_recording()
-            '''
             camera.close() 
             stream_pipe.stdin.close() 
             stream_pipe.wait()
             stream_pipe.terminate()
-            '''
             #logger.warning('Camera safely shut down')
             print('Camera safely shut down')
         else:
@@ -110,16 +112,22 @@ def main_stream():
             #logger.warning(ex)
             #logger.warning('Exception caught, rebooting stream...')
             camera.stop_recording()
-            '''
             camera.close() 
             stream_pipe.stdin.close() 
             stream_pipe.wait()
             stream_pipe.terminate()
             print('Camera safely shut down')
-            '''
             #logger.warning('Camera safely shut down')
             print('About to attempt stream restart...')
             #logger.warning('About to attempt stream restart...')
             main_stream()
+        '''
+    finally:
+        camera.close() 
+        stream_pipe.stdin.close() 
+        stream_pipe.wait()
+        print('Camera safely shut down')
+        print('About to attempt stream restart...')
+        main_stream()
 main_stream()
 #raspivid -o - -t 0 -vf -hf -fps 30 -b 6000000 | ffmpeg -re -ar 44100 -ac 2 -acodec pcm_s16le -f s16le -ac 2 -i /dev/zero -f h264 -i - -vcodec copy -acodec aac -ab 128k -g 50 -strict experimental -f flv rtmp://x.rtmp.youtube.com/live2/wg4f-bkfq-64at-245d-0h49
