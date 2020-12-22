@@ -27,7 +27,6 @@ TEMP_DEVICE_ID = '28-01193a3ed4e7'
 TEMP_DEVICE_PATH = '/sys/bus/w1/devices/'+TEMP_DEVICE_ID+'/w1_slave'
 TEMP_READ_FREQ_SEC = 10
 
-NOT_KEYBOARD_EXCEPTION = False
 EXCEPTION_THROW_DELAY = 55
 
 temp_val = 'temperature not available'
@@ -69,9 +68,7 @@ def main_stream():
     print('Starting stream at: ' + dt.datetime.now().strftime('%H:%M:%S'))
 
     stream_cmd = 'ffmpeg -re -ar 44100 -ac 2 -loglevel warning -acodec pcm_s16le -f s16le -ac 2 -i /dev/zero -f h264 -thread_queue_size 64 -i - -vcodec copy -acodec aac -ab 128k -g 50 -strict experimental -f flv ' + YOUTUBE + KEY 
-    fh = open("NUL","w")
     stream_pipe = subprocess.Popen(stream_cmd, shell=True, stdin=subprocess.PIPE)
-    fh.close() 
     camera = picamera.PiCamera(resolution=(H_SIZE, V_SIZE), framerate=FRAME_RATE)
     camera.annotate_background = picamera.Color('black')
 
@@ -90,21 +87,18 @@ def main_stream():
                     executor.submit(get_temp, TEMP_DEVICE_PATH)
 
                 read_checkpoint = dt.datetime.now()
-            if (time_now - read_checkpoint).seconds > EXCEPTION_THROW_DELAY:
-                raise ValueError('Force exception to reboot stream')
             camera.annotate_text = ' CN360 \n ' + time_now.strftime('%Y-%m-%d %H:%M:%S') + ' \n ' + temp_val + ' '
             camera.wait_recording(1)
     except Exception as ex:
         print(ex)
         print('Exception caught, rebooting stream...')
-        camera.stop_recording()        
         #logger.warning('Camera safely shut down')
+        camera.stop_recording()
     finally:
         camera.close() 
         stream_pipe.stdin.close() 
         stream_pipe.wait()
         print('Camera safely shut down')
-        time.sleep(3)
         print('About to attempt stream restart...')
         main_stream()
 main_stream()
