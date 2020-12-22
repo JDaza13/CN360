@@ -87,15 +87,12 @@ def main_stream():
 
                 read_checkpoint = dt.datetime.now()
             if (time_now - read_checkpoint).seconds > EXCEPTION_THROW_DELAY:
-                #raise ValueError('Force exception to reboot stream')
-                camera.close() 
-                stream_pipe.stdin.close() 
-                stream_pipe.wait()
-                logger.warning('Camera safely shut down')
+                raise ValueError('Force exception to reboot stream')
             camera.annotate_text = ' CN360 \n ' + time_now.strftime('%Y-%m-%d %H:%M:%S') + ' \n ' + temp_val + ' '
             camera.wait_recording(1)
     except Exception as ex:
         if is_keyboard_interrupt(ex):
+            camera.stop_recording()
             camera.close() 
             stream_pipe.stdin.close() 
             stream_pipe.wait()
@@ -103,6 +100,7 @@ def main_stream():
         else:
             logger.warning(ex)
             logger.warning('Exception caught, rebooting stream...')
+            camera.stop_recording()
             camera.close() 
             stream_pipe.stdin.close() 
             stream_pipe.wait()
