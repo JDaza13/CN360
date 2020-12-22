@@ -96,10 +96,12 @@ def main_stream():
     except Exception as ex:
         if is_keyboard_interrupt(ex):
             camera.stop_recording()
+            '''
             camera.close() 
             stream_pipe.stdin.close() 
             stream_pipe.wait()
             stream_pipe.terminate()
+            '''
             #logger.warning('Camera safely shut down')
             print('Camera safely shut down')
         else:
@@ -108,11 +110,13 @@ def main_stream():
             #logger.warning(ex)
             #logger.warning('Exception caught, rebooting stream...')
             camera.stop_recording()
+            '''
             camera.close() 
             stream_pipe.stdin.close() 
             stream_pipe.wait()
             stream_pipe.terminate()
             print('Camera safely shut down')
+            '''
             #logger.warning('Camera safely shut down')
             print('About to attempt stream restart...')
             #logger.warning('About to attempt stream restart...')
