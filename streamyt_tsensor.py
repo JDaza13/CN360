@@ -89,8 +89,8 @@ def main_stream():
                     executor.submit(get_temp, TEMP_DEVICE_PATH)
 
                 read_checkpoint = dt.datetime.now()
-            if (time_now - read_checkpoint).seconds > EXCEPTION_THROW_DELAY:
-                raise ValueError('Force exception to reboot stream')
+            #if (time_now - read_checkpoint).seconds > EXCEPTION_THROW_DELAY:
+            #    raise ValueError('Force exception to reboot stream')
             camera.annotate_text = ' CN360 \n ' + time_now.strftime('%Y-%m-%d %H:%M:%S') + ' \n ' + temp_val + ' '
             camera.wait_recording(1)
     except Exception as ex:
