@@ -98,18 +98,14 @@ def main_stream():
         print(ex)
         print('Exception caught, rebooting stream...')
         camera.stop_recording()        
-        if not is_keyboard_interrupt(ex):
-            NOT_KEYBOARD_EXCEPTION = True
-            #logger.warning('Camera safely shut down')
+        #logger.warning('Camera safely shut down')
     finally:
         camera.close() 
         stream_pipe.stdin.close() 
         stream_pipe.wait()
         print('Camera safely shut down')
-        if NOT_KEYBOARD_EXCEPTION:
-            NOT_KEYBOARD_EXCEPTION = False
-            time.sleep(t)
-            print('About to attempt stream restart...')
-            main_stream()
+        time.sleep(3)
+        print('About to attempt stream restart...')
+        main_stream()
 main_stream()
 #raspivid -o - -t 0 -vf -hf -fps 30 -b 6000000 | ffmpeg -re -ar 44100 -ac 2 -acodec pcm_s16le -f s16le -ac 2 -i /dev/zero -f h264 -i - -vcodec copy -acodec aac -ab 128k -g 50 -strict experimental -f flv rtmp://x.rtmp.youtube.com/live2/wg4f-bkfq-64at-245d-0h49
