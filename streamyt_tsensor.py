@@ -27,6 +27,8 @@ TEMP_DEVICE_ID = '28-01193a3ed4e7'
 TEMP_DEVICE_PATH = '/sys/bus/w1/devices/'+TEMP_DEVICE_ID+'/w1_slave'
 TEMP_READ_FREQ_SEC = 10
 
+EXCEPTION_THROW_DELAY = 30
+
 temp_val = 'temperature not available'
 
 def is_keyboard_interrupt(exception):
@@ -39,9 +41,9 @@ def config_logs():
         os.makedirs(LOGS_FOLDER_PATH)
 
     logger = logging.getLogger(BRAND_LABEL_NAME)
-    logger.setLevel(logging.WARN)
+    logger.setLevel(logging.INFO)
     fh = logging.FileHandler(LOGS_FILE_PATH)
-    fh.setLevel(logging.WARN)
+    fh.setLevel(logging.INFO)
     logger.addHandler(fh)
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     fh.setFormatter(formatter)
@@ -78,11 +80,12 @@ def main_stream():
         while True:
             time_now = dt.datetime.now()
             if (time_now - read_checkpoint).seconds > TEMP_READ_FREQ_SEC:
-                logger.warning('Making a new read to the temperature sensor.')
                 with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
                     executor.submit(get_temp, TEMP_DEVICE_PATH)
 
                 read_checkpoint = dt.datetime.now()
+            if (time_now - read_checkpoint).seconds > EXCEPTION_THROW_DELAY:
+                raise ValueError('Force exception to reboot stream')
             camera.annotate_text = ' CN360 \n ' + time_now.strftime('%Y-%m-%d %H:%M:%S') + ' \n ' + temp_val + ' '
             camera.wait_recording(1)
     except Exception as ex:
