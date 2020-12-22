@@ -27,7 +27,7 @@ TEMP_DEVICE_ID = '28-01193a3ed4e7'
 TEMP_DEVICE_PATH = '/sys/bus/w1/devices/'+TEMP_DEVICE_ID+'/w1_slave'
 TEMP_READ_FREQ_SEC = 10
 
-EXCEPTION_THROW_DELAY = 45
+EXCEPTION_THROW_DELAY = 55
 
 temp_val = 'temperature not available'
 
@@ -64,7 +64,8 @@ def get_temp(dev_file):
 
 def main_stream():
 
-    logger.warning('Starting stream at: ' + dt.datetime.now().strftime('%H:%M:%S'))
+    #logger.warning('Starting stream at: ' + dt.datetime.now().strftime('%H:%M:%S'))
+    print('Starting stream at: ' + dt.datetime.now().strftime('%H:%M:%S'))
 
     stream_cmd = 'ffmpeg -re -ar 44100 -ac 2 -loglevel warning -acodec pcm_s16le -f s16le -ac 2 -i /dev/zero -f h264 -thread_queue_size 64 -i - -vcodec copy -acodec aac -ab 128k -g 50 -strict experimental -f flv ' + YOUTUBE + KEY 
     fh = open("NUL","w")
@@ -99,18 +100,23 @@ def main_stream():
             stream_pipe.stdin.close() 
             stream_pipe.wait()
             stream_pipe.terminate()
-            logger.warning('Camera safely shut down')
+            #logger.warning('Camera safely shut down')
+            print('Camera safely shut down')
         else:
-            logger.warning(ex)
-            logger.warning('Exception caught, rebooting stream...')
+            print(ex)
+            print('Exception caught, rebooting stream...')
+            #logger.warning(ex)
+            #logger.warning('Exception caught, rebooting stream...')
             camera.stop_recording()
             camera.close() 
             stream_pipe.stdin.close() 
             stream_pipe.wait()
             stream_pipe.terminate()
-            logger.warning('Camera safely shut down')
+            print('Camera safely shut down')
+            #logger.warning('Camera safely shut down')
             time.sleep(3)
-            logger.warning('About to attempt stream restart...')
+            print('About to attempt stream restart...')
+            #logger.warning('About to attempt stream restart...')
             main_stream()
 main_stream()
 #raspivid -o - -t 0 -vf -hf -fps 30 -b 6000000 | ffmpeg -re -ar 44100 -ac 2 -acodec pcm_s16le -f s16le -ac 2 -i /dev/zero -f h264 -i - -vcodec copy -acodec aac -ab 128k -g 50 -strict experimental -f flv rtmp://x.rtmp.youtube.com/live2/wg4f-bkfq-64at-245d-0h49
