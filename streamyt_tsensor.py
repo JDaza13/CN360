@@ -60,7 +60,7 @@ def get_temp(dev_file):
         cels =float(temperature)/1000
         temp_val = str(cels) + ' C - ' + dt.datetime.now().strftime('%H:%M:%S')
 
-config_logs()
+#config_logs()
 
 def main_stream():
 
