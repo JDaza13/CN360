@@ -27,7 +27,7 @@ TEMP_DEVICE_ID = '28-01193a3ed4e7'
 TEMP_DEVICE_PATH = '/sys/bus/w1/devices/'+TEMP_DEVICE_ID+'/w1_slave'
 TEMP_READ_FREQ_SEC = 10
 
-GENERAL_START_DATE = dt.strptime('24/09/20 00:00:01', '%d/%m/%y %H:%M:%S')
+GENERAL_START_DATE = dt.datetime.strptime('24/09/20 00:00:01', '%d/%m/%y %H:%M:%S')
 
 temp_val = 'temperature not available'
 
