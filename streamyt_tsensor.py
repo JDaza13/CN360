@@ -27,6 +27,8 @@ TEMP_DEVICE_ID = '28-01193a3ed4e7'
 TEMP_DEVICE_PATH = '/sys/bus/w1/devices/'+TEMP_DEVICE_ID+'/w1_slave'
 TEMP_READ_FREQ_SEC = 10
 
+GENERAL_START_DATE = dt.strptime('24/09/20 00:00:01', '%d/%m/%y %H:%M:%S')
+
 temp_val = 'temperature not available'
 
 def config_logs():
@@ -80,7 +82,8 @@ def main_stream():
                     executor.submit(get_temp, TEMP_DEVICE_PATH)
 
                 read_checkpoint = dt.datetime.now()
-            camera.annotate_text = ' CN360 \n ' + time_now.strftime('%Y-%m-%d %H:%M:%S') + ' \n ' + temp_val + ' '
+            days_number = (time_now - GENERAL_START_DATE).days
+            camera.annotate_text = ' CN360 \n ' + ' DAY ' + days_number + ' \n ' + time_now.strftime('%Y-%m-%d %H:%M:%S') + ' \n ' + temp_val + ' '
             camera.wait_recording(1)
     except Exception as ex:
         logger.warning(ex)
