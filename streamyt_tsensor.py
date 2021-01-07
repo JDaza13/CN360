@@ -84,7 +84,7 @@ def main_stream():
 
                 read_checkpoint = dt.datetime.now()
             days_number = (time_now - GENERAL_START_DATE).days
-            camera.annotate_text = ' CN360 - Day ' + days_number + ' \n ' + time_now.strftime('%Y-%m-%d %H:%M:%S') + ' \n ' + temp_val + ' '
+            camera.annotate_text = ' CN360 - Day ' + str(days_number) + ' \n ' + time_now.strftime('%Y-%m-%d %H:%M:%S') + ' \n ' + temp_val + ' '
             camera.wait_recording(1)
     except Exception as ex:
         logger.warning(ex)
