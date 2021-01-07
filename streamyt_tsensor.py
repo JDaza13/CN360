@@ -54,7 +54,7 @@ def get_temp(dev_file):
     if index != -1 :
         temperature = contents[-1][index+2:]
         cels =float(temperature)/1000
-        temp_val = str(cels) + ' cel '
+        temp_val = str(cels) + ' celsius '
 
 config_logs()
 
