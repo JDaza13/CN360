@@ -61,6 +61,7 @@ config_logs()
 def main_stream():
 
     logger.warning('Starting stream at: ' + dt.datetime.now().strftime('%H:%M:%S'))
+    days_number = 0
 
     stream_cmd = 'ffmpeg -re -ar 44100 -ac 2 -loglevel warning -acodec pcm_s16le -f s16le -ac 2 -i /dev/zero -f h264 -thread_queue_size 64 -i - -vcodec copy -acodec aac -ab 128k -g 50 -strict experimental -f flv ' + YOUTUBE + KEY 
     stream_pipe = subprocess.Popen(stream_cmd, shell=True, stdin=subprocess.PIPE)
@@ -82,7 +83,7 @@ def main_stream():
                     executor.submit(get_temp, TEMP_DEVICE_PATH)
 
                 read_checkpoint = dt.datetime.now()
-            days_number = (time_now - GENERAL_START_DATE).days
+            #days_number = (time_now - GENERAL_START_DATE).days
             camera.annotate_text = ' CN360 \n ' + ' DAY ' + days_number + ' \n ' + time_now.strftime('%Y-%m-%d %H:%M:%S') + ' \n ' + temp_val + ' '
             camera.wait_recording(1)
     except Exception as ex:
