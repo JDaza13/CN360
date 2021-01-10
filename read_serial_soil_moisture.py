@@ -8,8 +8,8 @@ DRY_THRESHOLD = 460
 WET_THRESHOLD = 215
 
 def parse_soil_moisture(serial_val):
-	inverted_percentage = (int(serial_val) - WET_THRESHOLD) / (DRY_THRESHOLD - WET_THRESHOLD)
-	return '{:.2f}'.format(100-inverted_percentage)
+	percentage = (int(serial_val) - WET_THRESHOLD) / (DRY_THRESHOLD - WET_THRESHOLD)
+	return '{:.2f}'.format(percentage)
 
 if __name__ == '__main__':
     serial_com = serial.Serial('/dev/ttyUSB0', 9600, timeout=1)
