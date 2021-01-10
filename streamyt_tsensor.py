@@ -101,7 +101,7 @@ def main_stream():
                         soil_moisture_value = str(line_value[0])
 
             days_number = (time_now - GENERAL_START_DATE).days
-            camera.annotate_text = ' CN360 - Day ' + str(days_number) + ' \n ' + time_now.strftime('%Y-%m-%d %H:%M:%S') + ' \n ' + temp_val + ' ' + ' \n ' + soil_moisture_value + ' '
+            camera.annotate_text = ' CN360 - Day ' + str(days_number) + ' \n ' + time_now.strftime('%Y-%m-%d %H:%M:%S') + ' \n ' + temp_val + ' ' + soil_moisture_value + ' '
             camera.wait_recording(1)
     except Exception as ex:
         logger.warning(ex)
