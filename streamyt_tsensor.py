@@ -98,7 +98,7 @@ def main_stream():
                     line = serial_com.readline().rstrip()
                     line_value = re.findall('\d+', str(line))
                     if line_value and len(line_value) > 0:
-                        soil_moisture_value = line_value[0]
+                        soil_moisture_value = str(line_value[0])
 
             days_number = (time_now - GENERAL_START_DATE).days
             camera.annotate_text = ' CN360 - Day ' + str(days_number) + ' \n ' + time_now.strftime('%Y-%m-%d %H:%M:%S') + ' \n ' + temp_val + ' ' + ' \n ' + soil_moisture_value + ' '
