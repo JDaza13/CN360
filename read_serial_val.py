@@ -9,4 +9,5 @@ if __name__ == '__main__':
         if ser.in_waiting > 0:
             line = ser.readline().rstrip()
             line_value = re.findall('\d+', str(line))
-            print(line_value)
+            if line_value and len(line_value) > 0:
+            	print(line_value[0])
