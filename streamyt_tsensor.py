@@ -32,6 +32,8 @@ TEMP_READ_FREQ_SEC = 300
 
 SOIL_MOIST_SERIAL_NAME = '/dev/ttyUSB0'
 SOIL_MOIST_BAUD_RATE = 9600
+DRY_THRESHOLD = 465
+WET_THRESHOLD = 210
 
 GENERAL_START_DATE = dt.datetime.strptime('24/09/20 00:00:01', '%d/%m/%y %H:%M:%S')
 
@@ -51,6 +53,10 @@ def config_logs():
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     fh.setFormatter(formatter)
     logger.addHandler(fh)
+
+def parse_soil_moisture(serial_val):
+    inverted_percentage = 100 * (int(serial_val)-WET_THRESHOLD) / (DRY_THRESHOLD-WET_THRESHOLD)   
+    return '{:.2f}'.format(100-inverted_percentage)
 
 def get_temp(dev_file):
     global temp_val    
@@ -99,7 +105,7 @@ def main_stream():
                     line = serial_com.readline().rstrip()
                     line_value = re.findall('\d+', str(line))
                     if line_value and len(line_value) > 0:
-                        soil_moisture_value = str(line_value[0])
+                        soil_moisture_value = print(parse_soil_moisture(line_value[0]) + ' %  soil moist')
 
             days_number = (time_now - GENERAL_START_DATE).days
             camera.annotate_text = ' CN360 - Day ' + str(days_number) + ' \n ' + time_now.strftime('%Y-%m-%d %H:%M:%S') + ' \n ' + temp_val + ' \n ' + soil_moisture_value + ' '

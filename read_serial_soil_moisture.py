@@ -4,8 +4,8 @@ import re
 
 soil_moisture_value = 'soil moisture unavailable'
 
-DRY_THRESHOLD = 460
-WET_THRESHOLD = 215
+DRY_THRESHOLD = 465
+WET_THRESHOLD = 210
 
 def parse_soil_moisture(serial_val):
 	inverted_percentage = 100 * (int(serial_val)-WET_THRESHOLD) / (DRY_THRESHOLD-WET_THRESHOLD)   
