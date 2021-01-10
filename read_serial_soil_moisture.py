@@ -18,4 +18,5 @@ if __name__ == '__main__':
             line = serial_com.readline().rstrip()
             line_value = re.findall('\d+', str(line))
             if line_value and len(line_value) > 0:
-            	print(parse_soil_moisture(line_value[0]))
+            	print(line_value[0])
+            	#print(parse_soil_moisture(line_value[0]))
