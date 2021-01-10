@@ -4,6 +4,9 @@ import subprocess
 import picamera
 import concurrent.futures
 
+import serial
+import re
+
 import time
 import datetime as dt
 
