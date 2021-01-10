@@ -6,5 +6,5 @@ if __name__ == '__main__':
     while True:
         if ser.in_waiting > 0:
             line = ser.readline().rstrip
-            line_value = int(filter(str.isdigit, line))
+            line_value = int(filter(str.isdigit, str(line)))
             print(line_value)
