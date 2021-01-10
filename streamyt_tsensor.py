@@ -35,8 +35,8 @@ SOIL_MOIST_BAUD_RATE = 9600
 
 GENERAL_START_DATE = dt.datetime.strptime('24/09/20 00:00:01', '%d/%m/%y %H:%M:%S')
 
-temp_val = 'temperature not available'
-soil_moisture_value = 'soil moisture not available'
+temp_val = 'temperature unavailable'
+soil_moisture_value = 'soil moisture unavailable'
 
 def config_logs():
     global logger
@@ -101,7 +101,7 @@ def main_stream():
                         soil_moisture_value = str(line_value[0])
 
             days_number = (time_now - GENERAL_START_DATE).days
-            camera.annotate_text = ' CN360 - Day ' + str(days_number) + ' \n ' + time_now.strftime('%Y-%m-%d %H:%M:%S') + ' \n ' + temp_val + ' '
+            camera.annotate_text = ' CN360 Day ' + str(days_number) + ' \n ' + time_now.strftime('%Y-%m-%d %H:%M:%S') + ' \n ' + temp_val + ' \n ' + soil_moisture_value + ' '
             camera.wait_recording(1)
     except Exception as ex:
         logger.warning(ex)
