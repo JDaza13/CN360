@@ -7,6 +7,6 @@ if __name__ == '__main__':
     ser.flush()
     while True:
         if ser.in_waiting > 0:
-            line = ser.readline().rstrip
-            line_value = str(line)
+            line = ser.readline().rstrip()
+            line_value = re.findall('\d+', line)
             print(line_value)
