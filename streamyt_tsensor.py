@@ -68,8 +68,9 @@ config_logs()
 def main_stream():
 
     logger.warning('Starting stream at: ' + dt.datetime.now().strftime('%H:%M:%S'))
-    days_number = 0    
+    days_number = 0
 
+    global soil_moisture_value
     serial_com = serial.Serial(SOIL_MOIST_SERIAL_NAME, SOIL_MOIST_BAUD_RATE, timeout=10)
 
     stream_cmd = 'ffmpeg -re -ar 44100 -ac 2 -loglevel warning -acodec pcm_s16le -f s16le -ac 2 -i /dev/zero -f h264 -thread_queue_size 64 -i - -vcodec copy -acodec aac -ab 128k -g 50 -strict experimental -f flv ' + YOUTUBE + KEY 
