@@ -29,7 +29,7 @@ def main():
         api_service_name, api_version, credentials=credentials)
 
     request = youtube.liveStreams().list(
-        
+        part="\'id, snippet\'"
     )
     response = request.execute()
 
