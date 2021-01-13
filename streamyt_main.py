@@ -112,13 +112,12 @@ def main_stream():
             camera.wait_recording(1)
     except Exception as ex:
         logger.warning(ex)
-        logger.warning('Exception caught, rebooting stream...')
+        logger.warning('Exception caught!')        
         camera.stop_recording()
+        raise Exception('Stream crashed')
     finally:
         camera.close() 
         stream_pipe.stdin.close() 
         stream_pipe.wait()
         logger.warning('Camera safely shut down')
-        logger.warning('About to attempt stream restart...')
-        main_stream()
 main_stream()
