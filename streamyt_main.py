@@ -113,7 +113,7 @@ def main_stream():
                     if line_value and len(line_value) > 0:
                         plain_soil_moist_val = parse_soil_moisture(line_value[0])
                         soil_moisture_value = parse_soil_moisture(line_value[0]) + ' %  soil moist'
-                sensor_data_line = plain_temp_val + ',' + line + ',' + line_value + ',' + plain_soil_moist_val + ',' + time_now
+                sensor_data_line = plain_temp_val + ',' + str(line) + ',' + line_value + ',' + plain_soil_moist_val + ',' + time_now
                 logger.warning('New line on sensor data')
                 logger.warning(sensor_data_line)
             days_number = (time_now - GENERAL_START_DATE).days
