@@ -35,7 +35,7 @@ SOIL_MOIST_BAUD_RATE = 9600
 DRY_THRESHOLD = 465
 WET_THRESHOLD = 210
 
-GENERAL_START_DATE = dt.datetime.strptime('24/09/20 00:00:01', '%d/%m/%y %H:%M:%S')
+GENERAL_START_DATE = dt.datetime.strptime('15/01/21 13:00:00', '%d/%m/%y %H:%M:%S')
 
 plain_temp_val = ''
 temp_val = 'temperature unavailable'
