@@ -37,7 +37,9 @@ WET_THRESHOLD = 210
 
 GENERAL_START_DATE = dt.datetime.strptime('24/09/20 00:00:01', '%d/%m/%y %H:%M:%S')
 
+plain_temp_val = ''
 temp_val = 'temperature unavailable'
+plain_soil_moist_val = ''
 soil_moisture_value = 'soil moisture unavailable'
 
 def config_logs():
@@ -59,7 +61,8 @@ def parse_soil_moisture(serial_val):
     return '{:.2f}'.format(100-inverted_percentage)
 
 def get_temp(dev_file):
-    global temp_val    
+    global temp_val
+    global plain_temp_val 
     f = open(dev_file,"r")
     contents = f.readlines()
     f.close()
@@ -67,6 +70,7 @@ def get_temp(dev_file):
     if index != -1 :
         temperature = contents[-1][index+2:]
         cels =float(temperature)/1000
+        plain_temp_val = str(cels)
         temp_val = str(cels) + ' celsius '
 
 config_logs()
@@ -75,8 +79,10 @@ def main_stream():
 
     logger.warning('Starting stream at: ' + dt.datetime.now().strftime('%H:%M:%S'))
     days_number = 0
+    sensor_data_line = ''
 
     global soil_moisture_value
+    global plain_soil_moist_val
     serial_com = serial.Serial(SOIL_MOIST_SERIAL_NAME, SOIL_MOIST_BAUD_RATE, timeout=10)
 
     stream_cmd = 'ffmpeg -re -ar 44100 -ac 2 -loglevel warning -acodec pcm_s16le -f s16le -ac 2 -i /dev/zero -f h264 -thread_queue_size 64 -i - -vcodec copy -acodec aac -ab 128k -g 50 -strict experimental -f flv ' + YOUTUBE + KEY 
@@ -105,8 +111,11 @@ def main_stream():
                     line = serial_com.readline().rstrip()
                     line_value = re.findall('\d+', str(line))
                     if line_value and len(line_value) > 0:
+                        plain_soil_moist_val = parse_soil_moisture(line_value[0])
                         soil_moisture_value = parse_soil_moisture(line_value[0]) + ' %  soil moist'
-
+                sensor_data_line = plain_temp_val + ',' + line + ',' + line_value + ',' + plain_soil_moist_val + ',' + time_now
+                logger.warning('New line on sensor data')
+                logger.warning(sensor_data_line)
             days_number = (time_now - GENERAL_START_DATE).days
             camera.annotate_text = ' CN360 - Day ' + str(days_number) + ' \n ' + time_now.strftime('%Y-%m-%d %H:%M:%S') + ' \n ' + temp_val + ' \n ' + soil_moisture_value + ' '
             camera.wait_recording(1)
