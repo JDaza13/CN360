@@ -16,8 +16,8 @@ def start_script():
 	get_arg_from_cla(sys.argv)
 
 	try:
-		run('python3 ' + file_path + ' ' + run_arg, shell=True, check=True) 
-    except Exception as ex:
+		run('python3 ' + file_path + ' ' + run_arg, shell=True, check=True)
+	except Exception as ex:
 		print('Child script crashed')
 
 start_script()
