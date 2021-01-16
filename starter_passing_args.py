@@ -18,6 +18,6 @@ def start_script():
 	try:
 		run('python3 ' + file_path + ' ' + run_arg, shell=True, check=True) 
     except Exception as ex:
-        print('Child script crashed')
+    	print('Child script crashed')
 
 start_script()
