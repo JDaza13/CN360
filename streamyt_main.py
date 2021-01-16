@@ -1,4 +1,5 @@
 import os, os.path
+import sys
 
 import subprocess 
 import picamera
@@ -19,7 +20,7 @@ LOGS_FOLDER_PATH = 'logs/'
 LOGS_FILE_PATH = LOGS_FOLDER_PATH + 'cn360_test.log' 
 
 YOUTUBE_URL = 'rtmp://x.rtmp.youtube.com/live2/'
-YT_KEY = '7ukg-59up-s1ya-4wdz-dvt0'
+YT_KEY = ''
 
 H_SIZE = 1920
 V_SIZE = 1080
@@ -41,6 +42,11 @@ plain_temp_val = ''
 temp_val = 'temperature unavailable'
 plain_soil_moist_val = ''
 soil_moisture_value = 'soil moisture unavailable'
+
+def get_key_from_cla(argv):
+    global YT_KEY
+    if len(argv) > 1:
+        YT_KEY = str(argv[1])
 
 def config_logs():
     global logger
@@ -77,7 +83,9 @@ config_logs()
 
 def main_stream():
 
+
     logger.warning('Starting stream at: ' + dt.datetime.now().strftime('%H:%M:%S'))
+    get_key_from_cla(sys.argv)
     days_number = 0
     sensor_data_line = ''
 
