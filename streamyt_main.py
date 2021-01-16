@@ -18,8 +18,8 @@ BRAND_LABEL_NAME = 'CN360'
 LOGS_FOLDER_PATH = 'logs/'
 LOGS_FILE_PATH = LOGS_FOLDER_PATH + 'cn360_test.log' 
 
-YOUTUBE= 'rtmp://x.rtmp.youtube.com/live2/'
-KEY= '7ukg-59up-s1ya-4wdz-dvt0'
+YOUTUBE_URL = 'rtmp://x.rtmp.youtube.com/live2/'
+YT_KEY = '7ukg-59up-s1ya-4wdz-dvt0'
 
 H_SIZE = 1920
 V_SIZE = 1080
@@ -85,7 +85,7 @@ def main_stream():
     global plain_soil_moist_val
     serial_com = serial.Serial(SOIL_MOIST_SERIAL_NAME, SOIL_MOIST_BAUD_RATE, timeout=10)
 
-    stream_cmd = 'ffmpeg -re -ar 44100 -ac 2 -loglevel warning -acodec pcm_s16le -f s16le -ac 2 -i /dev/zero -f h264 -thread_queue_size 64 -i - -vcodec copy -acodec aac -ab 128k -g 50 -strict experimental -f flv ' + YOUTUBE + KEY 
+    stream_cmd = 'ffmpeg -re -ar 44100 -ac 2 -loglevel warning -acodec pcm_s16le -f s16le -ac 2 -i /dev/zero -f h264 -thread_queue_size 64 -i - -vcodec copy -acodec aac -ab 128k -g 50 -strict experimental -f flv ' + YOUTUBE_URL + YT_KEY 
     stream_pipe = subprocess.Popen(stream_cmd, shell=True, stdin=subprocess.PIPE)
     camera = picamera.PiCamera(resolution=(H_SIZE, V_SIZE), framerate=FRAME_RATE)
     camera.annotate_background = picamera.Color('black')
