@@ -1,7 +1,7 @@
 from subprocess import run
 from time import sleep
 
-file_path = 'receive_ars.py'
+file_path = 'receive_args.py'
 run_args = ' 7ukg-59up-s1ya-4wdz-dvt0'
 
 RESTART_WAIT_SECONDS = 3
