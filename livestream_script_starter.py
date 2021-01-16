@@ -16,12 +16,11 @@ def start_script():
 
 	get_arg_from_cla(sys.argv)
 	print('Starting scritp with argv: ' + run_arg)
-
-    try:
-        run('python3 ' + file_path + ' ' + run_arg, shell=True, check=True) 
-    except Exception as ex:
-        print('Child script crashed')
-        handle_crash()
+	try:
+    	run('python3 ' + file_path + ' ' + run_arg, shell=True, check=True) 
+	except Exception as ex:
+		print('Child script crashed')
+		handle_crash()
 
 def handle_crash():
     sleep(RESTART_WAIT_SECONDS)
