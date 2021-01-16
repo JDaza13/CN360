@@ -10,4 +10,4 @@ def get_key_from_cla(argv):
 		YT_KEY = str(argv[2])
 
 get_key_from_cla(sys.argv)
-print YT_KEY
+print('Key: ' + YT_KEY)
