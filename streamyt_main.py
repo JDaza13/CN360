@@ -138,6 +138,7 @@ def main_stream():
             if (time_now - screenshot_checkpoint).seconds > SCREENSHOT_FREQ_SEC:
                 logger.warning('Taking screenshot...')
                 filename_str = SCREENSHOT_BASE_FILE_PATH + time_now.strftime('%Y%m%d%H%M') + '.jpg'
+                camera.annotate_text = ''
                 camera.wait_recording(5)
                 camera.capture(filename_str, use_video_port=True)
                 camera.wait_recording(5)
