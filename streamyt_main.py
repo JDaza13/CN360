@@ -136,10 +136,13 @@ def main_stream():
                 logger.warning(sensor_data_line)
             days_number = (time_now - GENERAL_START_DATE).days
             if (time_now - screenshot_checkpoint).minutes > SCREENSHOT_FREQ_MINUTES:
+                logger.warning('Taking screenshot...')
+                filename_str = SCREENSHOT_BASE_FILE_PATH + time_now.strftime('%Y%m%d%H%M') + '.jpg'
                 camera.wait_recording(5)
-                camera.capture(SCREENSHOT_BASE_FILE_PATH + time_now.strftime('%Y%m%d%H%M') + '.jpg', use_video_port=True)
+                camera.capture(filename_str, use_video_port=True)
                 camera.wait_recording(5)
                 screenshot_checkpoint = dt.datetime.now()
+                logger.warning('Screenshot taken: ' + filename_str)
             camera.annotate_text = ' CN360 - Day ' + str(days_number) + ' \n ' + time_now.strftime('%Y-%m-%d %H:%M:%S') + ' \n ' + temp_val + ' \n ' + soil_moisture_value + ' '
             camera.wait_recording(1)
     except Exception as ex:
