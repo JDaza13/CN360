@@ -33,7 +33,7 @@ TEMP_READ_FREQ_SEC = 300
 
 SCREENSHOT_FODLER_PATH = 'screenshots/'
 SCREENSHOT_BASE_FILE_PATH = SCREENSHOT_FODLER_PATH + 'cn360_screenshot_'
-SCREENSHOT_FREQ_MINUTES = 15
+SCREENSHOT_FREQ_SEC = 900
 
 SOIL_MOIST_SERIAL_NAME = '/dev/ttyUSB0'
 SOIL_MOIST_BAUD_RATE = 9600
@@ -135,7 +135,7 @@ def main_stream():
                 logger.warning('New line on sensor data')
                 logger.warning(sensor_data_line)
             days_number = (time_now - GENERAL_START_DATE).days
-            if (time_now - screenshot_checkpoint).minutes > SCREENSHOT_FREQ_MINUTES:
+            if (time_now - screenshot_checkpoint).seconds > SCREENSHOT_FREQ_SEC:
                 logger.warning('Taking screenshot...')
                 filename_str = SCREENSHOT_BASE_FILE_PATH + time_now.strftime('%Y%m%d%H%M') + '.jpg'
                 camera.wait_recording(5)
