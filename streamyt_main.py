@@ -1,7 +1,7 @@
 import os, os.path
 import sys
 
-import subprocess 
+import subprocess
 import picamera
 import concurrent.futures
 
@@ -17,7 +17,7 @@ logger = None
 
 BRAND_LABEL_NAME = 'CN360'
 LOGS_FOLDER_PATH = 'logs/'
-LOGS_FILE_PATH = LOGS_FOLDER_PATH + 'cn360_test.log' 
+LOGS_FILE_PATH = LOGS_FOLDER_PATH + 'cn360_test.log'
 
 YOUTUBE_URL = 'rtmp://x.rtmp.youtube.com/live2/'
 YT_KEY = ''
@@ -30,6 +30,10 @@ BITRATE = 4500000
 TEMP_DEVICE_ID = '28-01193a3ed4e7'
 TEMP_DEVICE_PATH = '/sys/bus/w1/devices/'+TEMP_DEVICE_ID+'/w1_slave'
 TEMP_READ_FREQ_SEC = 300
+
+SCREENSHOT_FODLER_PATH = 'screenshots/'
+SCREENSHOT_BASE_FILE_PATH = SCREENSHOT_FODLER_PATH + 'cn360_screenshot_'
+SCREENSHOT_FREQ_MINUTES = 15
 
 SOIL_MOIST_SERIAL_NAME = '/dev/ttyUSB0'
 SOIL_MOIST_BAUD_RATE = 9600
@@ -62,13 +66,17 @@ def config_logs():
     fh.setFormatter(formatter)
     logger.addHandler(fh)
 
+def config_screenshots():
+    if not os.path.exists(SCREENSHOT_FODLER_PATH):
+        os.makedirs(SCREENSHOT_FODLER_PATH)
+
 def parse_soil_moisture(serial_val):
-    inverted_percentage = 100 * (int(serial_val)-WET_THRESHOLD) / (DRY_THRESHOLD-WET_THRESHOLD)   
+    inverted_percentage = 100 * (int(serial_val)-WET_THRESHOLD) / (DRY_THRESHOLD-WET_THRESHOLD)
     return '{:.2f}'.format(100-inverted_percentage)
 
 def get_temp(dev_file):
     global temp_val
-    global plain_temp_val 
+    global plain_temp_val
     f = open(dev_file,"r")
     contents = f.readlines()
     f.close()
@@ -80,6 +88,7 @@ def get_temp(dev_file):
         temp_val = str(cels) + ' celsius '
 
 config_logs()
+config_screenshots()
 
 def main_stream():
 
@@ -93,19 +102,20 @@ def main_stream():
     global plain_soil_moist_val
     serial_com = serial.Serial(SOIL_MOIST_SERIAL_NAME, SOIL_MOIST_BAUD_RATE, timeout=10)
 
-    stream_cmd = 'ffmpeg -re -ar 44100 -ac 2 -loglevel warning -acodec pcm_s16le -f s16le -ac 2 -i /dev/zero -f h264 -thread_queue_size 64 -i - -vcodec copy -acodec aac -ab 128k -g 50 -strict experimental -f flv ' + YOUTUBE_URL + YT_KEY 
+    stream_cmd = 'ffmpeg -re -ar 44100 -ac 2 -loglevel warning -acodec pcm_s16le -f s16le -ac 2 -i /dev/zero -f h264 -thread_queue_size 64 -i - -vcodec copy -acodec aac -ab 128k -g 50 -strict experimental -f flv ' + YOUTUBE_URL + YT_KEY
     stream_pipe = subprocess.Popen(stream_cmd, shell=True, stdin=subprocess.PIPE)
     camera = picamera.PiCamera(resolution=(H_SIZE, V_SIZE), framerate=FRAME_RATE)
     camera.annotate_background = picamera.Color('black')
 
-    try: 
+    try:
         now = time.strftime("%Y-%m-%d-%H:%M:%S")
-        camera.framerate = FRAME_RATE 
-        camera.vflip = True 
+        camera.framerate = FRAME_RATE
+        camera.vflip = True
         camera.hflip = True
         camera.start_preview(fullscreen=False, window = (800, 20, 640, 480))
         camera.start_recording(stream_pipe.stdin, format='h264', bitrate = BITRATE)
         read_checkpoint = dt.datetime.now()
+        screenshot_checkpoint = read_checkpoint
         while True:
             time_now = dt.datetime.now()
             if (time_now - read_checkpoint).seconds > TEMP_READ_FREQ_SEC:
@@ -125,16 +135,21 @@ def main_stream():
                 logger.warning('New line on sensor data')
                 logger.warning(sensor_data_line)
             days_number = (time_now - GENERAL_START_DATE).days
+            if (time_now - screenshot_checkpoint).minutes > SCREENSHOT_FREQ_MINUTES:
+                camera.wait_recording(5)
+                camera.capture(SCREENSHOT_BASE_FILE_PATH + time_now.strftime('%Y%m%d%H%M') + '.jpg', use_video_port=True)
+                camera.wait_recording(5)
+                screenshot_checkpoint = dt.datetime.now()
             camera.annotate_text = ' CN360 - Day ' + str(days_number) + ' \n ' + time_now.strftime('%Y-%m-%d %H:%M:%S') + ' \n ' + temp_val + ' \n ' + soil_moisture_value + ' '
             camera.wait_recording(1)
     except Exception as ex:
         logger.warning(ex)
-        logger.warning('Exception caught!')        
+        logger.warning('Exception caught!')
         camera.stop_recording()
         raise Exception('Stream crashed')
     finally:
-        camera.close() 
-        stream_pipe.stdin.close() 
+        camera.close()
+        stream_pipe.stdin.close()
         stream_pipe.wait()
         logger.warning('Camera safely shut down')
 main_stream()
