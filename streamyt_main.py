@@ -144,9 +144,9 @@ def main_stream():
                 logger.warning('Taking screenshot...')
                 filename_str = SCREENSHOT_BASE_FILE_PATH + time_now.strftime('%Y%m%d%H%M') + '.jpg'
                 camera.annotate_text = ''
-                camera.wait_recording(5)
+                camera.wait_recording(2)
                 camera.capture(filename_str, use_video_port=True)
-                camera.wait_recording(5)
+                camera.wait_recording(2)
                 screenshot_checkpoint = dt.datetime.now()
                 logger.warning('Screenshot taken: ' + filename_str)
                 camera.annotate_text = annotation_text
