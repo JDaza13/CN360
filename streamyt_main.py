@@ -120,6 +120,8 @@ def main_stream():
         screenshot_checkpoint = read_checkpoint
         while True:
             time_now = dt.datetime.now()
+            days_number = (time_now - GENERAL_START_DATE).days
+            #read sensors
             if (time_now - read_checkpoint).seconds > TEMP_READ_FREQ_SEC:
                 with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
                     executor.submit(get_temp, TEMP_DEVICE_PATH)
@@ -136,7 +138,8 @@ def main_stream():
                 sensor_data_line = plain_temp_val + ',' + str(line) + ',' + str(line_value) + ',' + plain_soil_moist_val + ',' + time_now.strftime('%Y-%m-%d %H:%M:%S')
                 logger.warning('New line on sensor data')
                 logger.warning(sensor_data_line)
-            days_number = (time_now - GENERAL_START_DATE).days
+            #take screenshots
+            annotation_text = ' CN360 - Day ' + str(days_number) + ' \n ' + time_now.strftime('%Y-%m-%d %H:%M:%S') + ' \n ' + temp_val + ' \n ' + soil_moisture_value + ' '
             if (time_now.hour >= SCREENSHOT_LOW_THRESHOLD_HOUR and time_now.hour < SCREENSHOT_HIGH_THRESHOLD_HOUR) and (time_now - screenshot_checkpoint).seconds > SCREENSHOT_FREQ_SEC:
                 logger.warning('Taking screenshot...')
                 filename_str = SCREENSHOT_BASE_FILE_PATH + time_now.strftime('%Y%m%d%H%M') + '.jpg'
@@ -146,7 +149,8 @@ def main_stream():
                 camera.wait_recording(5)
                 screenshot_checkpoint = dt.datetime.now()
                 logger.warning('Screenshot taken: ' + filename_str)
-            camera.annotate_text = ' CN360 - Day ' + str(days_number) + ' \n ' + time_now.strftime('%Y-%m-%d %H:%M:%S') + ' \n ' + temp_val + ' \n ' + soil_moisture_value + ' '
+                camera.annotate_text = annotation_text
+            camera.annotate_text = annotation_text
             camera.wait_recording(1)
     except Exception as ex:
         logger.warning(ex)
