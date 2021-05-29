@@ -34,8 +34,10 @@ TEMP_READ_FREQ_SEC = 300
 SCREENSHOT_FODLER_PATH = 'screenshots/'
 SCREENSHOT_BASE_FILE_PATH = SCREENSHOT_FODLER_PATH + 'cn360_screenshot_'
 SCREENSHOT_FREQ_SEC = 150
-SCREENSHOT_LOW_THRESHOLD_HOUR = 6
-SCREENSHOT_HIGH_THRESHOLD_HOUR = 19
+
+LIGHT_LOW_THRESHOLD_HOUR = 12
+LIGHT_HIGH_THRESHOLD_HOUR = 13
+LIGHT_FREQ_SEC = 10
 
 SOIL_MOIST_SERIAL_NAME = '/dev/ttyUSB0'
 SOIL_MOIST_BAUD_RATE = 9600
@@ -102,6 +104,8 @@ def main_stream():
 
     global soil_moisture_value
     global plain_soil_moist_val
+
+    light_control_state = 'off'
     serial_com = serial.Serial(SOIL_MOIST_SERIAL_NAME, SOIL_MOIST_BAUD_RATE, timeout=10)
 
     stream_cmd = 'ffmpeg -re -ar 44100 -ac 2 -loglevel warning -acodec pcm_s16le -f s16le -ac 2 -i /dev/zero -f h264 -thread_queue_size 64 -i - -vcodec copy -acodec aac -ab 128k -g 50 -strict experimental -f flv ' + YOUTUBE_URL + YT_KEY
@@ -150,6 +154,13 @@ def main_stream():
                 screenshot_checkpoint = dt.datetime.now()
                 logger.warning('Screenshot taken: ' + filename_str)
                 camera.annotate_text = annotation_text
+            #lights control
+            if (time_now.hour >= LIGHT_LOW_THRESHOLD_HOUR and time_now.hour < LIGHT_HIGH_THRESHOLD_HOUR) and (time_now - screenshot_checkpoint).seconds > LIGHT_FREQ_SEC:
+                if light_control_state == 'on':
+                    light_control_state = 'off'
+                if light_control_state == 'off':
+                    light_control_state = 'on'
+                serial_com.write((light_control_state + '\n').encode());
             camera.annotate_text = annotation_text
             camera.wait_recording(1)
     except Exception as ex:
