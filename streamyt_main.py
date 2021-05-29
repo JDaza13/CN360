@@ -160,7 +160,7 @@ def main_stream():
             if (time_now.hour >= LIGHT_LOW_THRESHOLD_HOUR and time_now.hour < LIGHT_HIGH_THRESHOLD_HOUR) and (time_now - screenshot_checkpoint).seconds > LIGHT_FREQ_SEC:
                 if light_control_state == 'on':
                     light_control_state = 'off'
-                if light_control_state == 'off':
+                elif light_control_state == 'off':
                     light_control_state = 'on'
                 serial_com.write((light_control_state + '\n').encode());
             camera.annotate_text = annotation_text
