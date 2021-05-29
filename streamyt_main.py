@@ -152,10 +152,10 @@ def main_stream():
                 screenshot_checkpoint = dt.datetime.now()
                 logger.warning('Screenshot taken: ' + filename_str)
                 camera.annotate_text = annotation_text
-                if(light_control_state == 'on')
+                if light_control_state == 'on'
                     light_control_state = 'off'
-                if(light_control_state == 'off')
-                    light_control_state ='on'
+                if light_control_state == 'off'
+                    light_control_state = 'on'
                 #light control
                 serial_com.write(light_control_state + '\n');
             camera.annotate_text = annotation_text
