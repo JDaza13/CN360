@@ -163,7 +163,7 @@ def main_stream():
                     light_control_state = 'on'
                 else:
                     light_control_state = 'off'
-                screenshot_checkpoint = dt.datetime.now()
+                light_checkpoint = dt.datetime.now()
                 serial_com.write((light_control_state + '\n').encode())
             camera.annotate_text = annotation_text
             camera.wait_recording(1)
