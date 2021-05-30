@@ -14,5 +14,5 @@ if __name__ == '__main__':
         if light_control_state == 'off':
             light_control_state = 'on'
         #light control
-        serial_com.write((light_control_state + '\n').encode());
+        serial_com.write((light_control_state + '\n').encode())
         time.sleep(5)

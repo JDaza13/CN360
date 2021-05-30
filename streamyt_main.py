@@ -35,10 +35,11 @@ SCREENSHOT_FODLER_PATH = 'screenshots/'
 SCREENSHOT_BASE_FILE_PATH = SCREENSHOT_FODLER_PATH + 'cn360_screenshot_'
 SCREENSHOT_FREQ_SEC = 150
 SCREENSHOT_LOW_THRESHOLD_HOUR = 6
-SCREENSHOT_HIGH_THRESHOLD_HOUR = 23
+SCREENSHOT_HIGH_THRESHOLD_HOUR = 19
 
 LIGHT_LOW_THRESHOLD_HOUR = 18
 LIGHT_HIGH_THRESHOLD_HOUR = 22
+LIGHT_FREQ_SEC = 60
 
 SOIL_MOIST_SERIAL_NAME = '/dev/ttyUSB0'
 SOIL_MOIST_BAUD_RATE = 9600
@@ -123,6 +124,7 @@ def main_stream():
         camera.start_recording(stream_pipe.stdin, format='h264', bitrate = BITRATE)
         read_checkpoint = dt.datetime.now()
         screenshot_checkpoint = read_checkpoint
+        light_checkpoint = read_checkpoint
         while True:
             time_now = dt.datetime.now()
             days_number = (time_now - GENERAL_START_DATE).days
@@ -155,12 +157,14 @@ def main_stream():
                 screenshot_checkpoint = dt.datetime.now()
                 logger.warning('Screenshot taken: ' + filename_str)
                 camera.annotate_text = annotation_text
-                serial_com.write((light_control_state + '\n').encode());
             #lights control
-            if (time_now.hour >= LIGHT_LOW_THRESHOLD_HOUR and time_now.hour < LIGHT_HIGH_THRESHOLD_HOUR):
-                light_control_state = 'on'
-            else:
-                light_control_state = 'off'
+            if((time_now - light_checkpoint).seconds > LIGHT_FREQ_SEC):
+                if (time_now.hour >= LIGHT_LOW_THRESHOLD_HOUR and time_now.hour < LIGHT_HIGH_THRESHOLD_HOUR):
+                    light_control_state = 'on'
+                else:
+                    light_control_state = 'off'
+                screenshot_checkpoint = dt.datetime.now()
+                serial_com.write((light_control_state + '\n').encode())
             camera.annotate_text = annotation_text
             camera.wait_recording(1)
     except Exception as ex:
