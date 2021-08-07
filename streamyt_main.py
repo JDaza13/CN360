@@ -146,7 +146,8 @@ def main_stream():
                 logger.warning('New line on sensor data')
                 logger.warning(sensor_data_line)
             #take screenshots
-            annotation_text = ' CN360 - Day ' + str(days_number) + ' \n ' + time_now.strftime('%Y-%m-%d %H:%M:%S') + ' \n ' + temp_val + ' \n ' + 'lights: ' + light_control_state + ' '
+            annotation_text = ' CN360 intermission ' + ' \n ' + time_now.strftime('%Y-%m-%d %H:%M:%S') + ' \n ' + temp_val + ' '#\n ' + 'lights: ' + light_control_state + ' '
+            '''
             if (time_now.hour >= SCREENSHOT_LOW_THRESHOLD_HOUR and time_now.hour < SCREENSHOT_HIGH_THRESHOLD_HOUR) and (time_now - screenshot_checkpoint).seconds > SCREENSHOT_FREQ_SEC:
                 logger.warning('Taking screenshot...')
                 filename_str = SCREENSHOT_BASE_FILE_PATH + time_now.strftime('%Y%m%d%H%M') + '.jpg'
@@ -157,7 +158,9 @@ def main_stream():
                 screenshot_checkpoint = dt.datetime.now()
                 logger.warning('Screenshot taken: ' + filename_str)
                 camera.annotate_text = annotation_text
+            '''
             #lights control
+            '''
             if((time_now - light_checkpoint).seconds > LIGHT_FREQ_SEC):
                 if (time_now.hour >= LIGHT_LOW_THRESHOLD_HOUR and time_now.hour < LIGHT_HIGH_THRESHOLD_HOUR):
                     light_control_state = 'on'
@@ -165,6 +168,7 @@ def main_stream():
                     light_control_state = 'off'
                 light_checkpoint = dt.datetime.now()
                 serial_com.write((light_control_state + '\n').encode())
+            '''
             camera.annotate_text = annotation_text
             camera.wait_recording(1)
     except Exception as ex:
