@@ -126,7 +126,7 @@ def main_stream():
         screenshot_checkpoint = read_checkpoint
         light_checkpoint = read_checkpoint
         while True:
-            #time_now = dt.datetime.now()
+            time_now = dt.datetime.now()
             '''
             days_number = (time_now - GENERAL_START_DATE).days
             #read sensors
