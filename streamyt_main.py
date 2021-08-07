@@ -126,7 +126,8 @@ def main_stream():
         screenshot_checkpoint = read_checkpoint
         light_checkpoint = read_checkpoint
         while True:
-            time_now = dt.datetime.now()
+            #time_now = dt.datetime.now()
+            '''
             days_number = (time_now - GENERAL_START_DATE).days
             #read sensors
             if (time_now - read_checkpoint).seconds > TEMP_READ_FREQ_SEC:
@@ -146,7 +147,8 @@ def main_stream():
                 logger.warning('New line on sensor data')
                 logger.warning(sensor_data_line)
             #take screenshots
-            annotation_text = ' CN360 intermission ' + ' \n ' + time_now.strftime('%Y-%m-%d %H:%M:%S') + ' \n ' + temp_val + ' '#\n ' + 'lights: ' + light_control_state + ' '
+            '''
+            annotation_text = ' CN360 intermission ' + ' \n ' + time_now.strftime('%Y-%m-%d %H:%M:%S') + ' '#+ ' \n ' + temp_val + ' '#\n ' + 'lights: ' + light_control_state + ' '
             '''
             if (time_now.hour >= SCREENSHOT_LOW_THRESHOLD_HOUR and time_now.hour < SCREENSHOT_HIGH_THRESHOLD_HOUR) and (time_now - screenshot_checkpoint).seconds > SCREENSHOT_FREQ_SEC:
                 logger.warning('Taking screenshot...')
