@@ -51,7 +51,7 @@ def main_stream():
     logger.warning('Starting stream at: ' + dt.datetime.now().strftime('%H:%M:%S'))
     get_key_from_cla(sys.argv)
     
-    stream_cmd = 'ffmpeg -re -i video/base_radio_file.mp4 -c:v libx264 -b:v 2M -c:a copy -strict -2 -flags +global_header -bsf:a aac_adtstoasc -bufsize 2100k -f flv ' + YOUTUBE_URL + YT_KEY
+    stream_cmd = 'ffmpeg -re -i video/base_radio_file.mp4 -loglevel warning -c:v libx264 -b:v 2M -c:a copy -strict -2 -flags +global_header -bsf:a aac_adtstoasc -bufsize 2100k -f flv ' + YOUTUBE_URL + YT_KEY
     stream_pipe = subprocess.Popen(stream_cmd, shell=True, stdin=subprocess.PIPE)
    
     try:
