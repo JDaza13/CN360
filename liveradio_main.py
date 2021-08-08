@@ -24,9 +24,7 @@ V_SIZE = 1080
 FRAME_RATE = 25
 BITRATE = 4500000
 
-GENERAL_START_DATE = dt.datetime.strptime('14/01/21 13:00:00', '%d/%m/%y %H:%M:%S')
-
-
+# python3 liveradio_script_starter.py [YT_KEY]
 def get_key_from_cla(argv):
     global YT_KEY
     if len(argv) > 1:
@@ -53,7 +51,7 @@ def main_stream():
     logger.warning('Starting stream at: ' + dt.datetime.now().strftime('%H:%M:%S'))
     get_key_from_cla(sys.argv)
     
-    stream_cmd = 'ffmpeg -re -ar 44100 -ac 2 -loglevel warning -acodec pcm_s16le -f s16le -i video/base_radio_file.mp4 -f h264 -thread_queue_size 64 -i - -vcodec copy -ab 128k -g 50 -strict experimental -f flv ' + YOUTUBE_URL + YT_KEY
+    stream_cmd = 'ffmpeg -re -ar 44100 -ac 2 -loglevel warning -acodec pcm_s16le -f s16le -i base_radio_file.mp4 -f h264 -thread_queue_size 64 -i - -vcodec copy -ab 128k -g 50 -strict experimental -f flv ' + YOUTUBE_URL + YT_KEY
     stream_pipe = subprocess.Popen(stream_cmd, shell=True, stdin=subprocess.PIPE)
    
     try:
