@@ -2,7 +2,6 @@ import os, os.path
 import sys
 
 import subprocess
-import picamera
 import concurrent.futures
 import re
 
@@ -67,7 +66,6 @@ def main_stream():
         logger.warning('Exception caught!')
         raise Exception('Stream crashed')
     finally:
-        camera.close()
         stream_pipe.stdin.close()
         stream_pipe.wait()
         logger.warning('Live radio safely shut down')
