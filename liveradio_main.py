@@ -20,7 +20,7 @@ YOUTUBE_URL = 'rtmp://x.rtmp.youtube.com/live2/'
 YT_KEY = ''
 
 AUDIO_SOURCE_FIND = 'find audio/ -name "*.mp3" | xargs -I $'
-FFMPEG_CONFIG = ' -c:v libx264 -b:v 2M -c:a copy -strict -2 -flags +global_header -bsf:a aac_adtstoasc -bufsize 2100k -f flv '
+FFMPEG_CONFIG = ' -c:v libx264 -b:v 2M -c:a copy -strict -2 -flags +global_header -bsf:a aac -bufsize 2100k -f flv '
 
 H_SIZE = 1920
 V_SIZE = 1080
