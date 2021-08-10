@@ -19,6 +19,9 @@ LOGS_FILE_PATH = LOGS_FOLDER_PATH + 'cn360_liveradio.log'
 YOUTUBE_URL = 'rtmp://x.rtmp.youtube.com/live2/'
 YT_KEY = ''
 
+AUDIO_SOURCE_FIND = 'find audio/ -name "*.mp3" | xargs -I $'
+FFMPEG_CONFIG = '-c:v libx264 -b:v 2M -c:a copy -strict -2 -flags +global_header -bsf:a aac_adtstoasc -bufsize 2100k -f flv '
+
 H_SIZE = 1920
 V_SIZE = 1080
 FRAME_RATE = 25
@@ -51,7 +54,7 @@ def main_stream():
     logger.warning('Starting stream at: ' + dt.datetime.now().strftime('%H:%M:%S'))
     get_key_from_cla(sys.argv)
     
-    stream_cmd = 'ffmpeg -stream_loop -1 -re -i video/base_radio_file.mp4 -loglevel warning -c:v libx264 -b:v 2M -c:a copy -strict -2 -flags +global_header -bsf:a aac_adtstoasc -bufsize 2100k -f flv ' + YOUTUBE_URL + YT_KEY
+    stream_cmd = AUDIO_SOURCE_FIND + 'ffmpeg -stream_loop -1 -re -i video/first_loop_test.mp4 -i $ -loglevel warning' + FFMPEG_CONFIG + YOUTUBE_URL + YT_KEY
     stream_pipe = subprocess.Popen(stream_cmd, shell=True, stdin=subprocess.PIPE)
    
     try:
