@@ -54,7 +54,7 @@ def main_stream():
     logger.warning('Starting stream at: ' + dt.datetime.now().strftime('%H:%M:%S'))
     get_key_from_cla(sys.argv)
     
-    stream_cmd = AUDIO_SOURCE_FIND + 'ffmpeg -stream_loop -1 -re -i video/first_loop_test.mp4 -i $ -loglevel warning' + FFMPEG_CONFIG + YOUTUBE_URL + YT_KEY
+    stream_cmd = 'ffmpeg -stream_loop -1 -re -i video/first_loop_test.mp4 -i Ketsa_Happy_Chappy.mp3 -loglevel warning' + FFMPEG_CONFIG + YOUTUBE_URL + YT_KEY
     stream_pipe = subprocess.Popen(stream_cmd, shell=True, stdin=subprocess.PIPE)
    
     try:
