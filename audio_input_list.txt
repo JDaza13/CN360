@@ -1,4 +1,5 @@
 ffconcat version 1.0
 file 'audio/cat.mp3'
 file 'audio/dog.mp3'
+file 'audio/kitten.mp3'
 file 'audio_input_list.txt'
