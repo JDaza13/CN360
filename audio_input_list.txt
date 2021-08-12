@@ -1,2 +1,2 @@
 file 'audio/Ketsa_Happy_Chappy.mp3'
-file 'Frequency Decree - Sidewinder.mp3.mp3'
+file 'Frequency Decree - Sidewinder.mp3'
