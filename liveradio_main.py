@@ -30,7 +30,7 @@ BITRATE = 4500000
 # python3 liveradio_script_starter.py [YT_KEY]
 # ffmpeg -stream_loop -1 -re -i video/base_radio_file.mp4 -loglevel warning -c:v libx264 -b:v 2M -c:a copy -strict -2 -flags +global_header -bsf:a aac_adtstoasc -bufsize 2100k -f flv ' + YOUTUBE_URL + YT_KEY
 # ffmpeg -stream_loop -1 -re -i video/first_loop_test.mp4 -stream_loop -1 -re -f concat -i audio_input_list.txt -map 0:v -map 1:a -c:v libx264 -vf format=yuv420p -b:v 2M -bufsize 4M -maxrate 2M -g 50 -c:a aac -b:a 128k -flags +global_header -f flv rtmp://x.rtmp.youtube.com/live2/
-# ffmpeg -stream_loop -1 -re -i video/base_radio_file.mp4 -stream_loop -1 -re -f concat -i audio_input_list.txt -map 0:v -map 1:a -c:v libx264 -vf format=yuv420p -b:v 2M -bufsize 4M -maxrate 2M -g 50 -c:a aac -b:a 128k -flags +global_header -f flv rtmp://x.rtmp.youtube.com/live2/
+# ffmpeg -stream_loop -1 -re -i video/first_loop_test_ytf.mp4 -stream_loop -1 -re -f concat -i audio_input_list.txt -map 0:v -map 1:a -c:v libx264 -vf format=yuv420p -b:v 2M -bufsize 4M -maxrate 2M -g 50 -c:a aac -b:a 128k -flags +global_header -f flv rtmp://x.rtmp.youtube.com/live2/
 
 def get_key_from_cla(argv):
     global YT_KEY
