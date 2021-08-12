@@ -19,8 +19,8 @@ LOGS_FILE_PATH = LOGS_FOLDER_PATH + 'cn360_liveradio.log'
 YOUTUBE_URL = 'rtmp://x.rtmp.youtube.com/live2/'
 YT_KEY = ''
 
-AUDIO_SOURCE_FIND = 'find audio/ -name "*.mp3" | xargs -I $'
-FFMPEG_CONFIG = ' -map 0:v -map 1:a -c:v copy -c:a copy -strict -2 -flags +global_header -bufsize 2100k -f flv '
+STREAM_SOURCES = ' -stream_loop -1 -re -i video/base_radio_file.mp4 -stream_loop -1 -re -f concat -i audio_input_list.txt '
+STREAM_CONFIG = ' -map 0:v -map 1:a -c:v libx264 -vf format=yuv420p -b:v 2M -bufsize 4M -maxrate 2M -g 50 -c:a aac -b:a 128k -flags +global_header '
 
 H_SIZE = 1920
 V_SIZE = 1080
@@ -28,8 +28,8 @@ FRAME_RATE = 25
 BITRATE = 4500000
 
 # python3 liveradio_script_starter.py [YT_KEY]
-# ffmpeg -stream_loop -1 -re -i video/first_loop_test.mp4 -i audio/Ketsa_Happy_Chappy.mp3 -c:v libx264 -b:v 2M -c:a copy -strict -2 -flags +global_header -bsf:a aac -bufsize 2100k -f flv rtmp://x.rtmp.youtube.com/live2/{KEY}
-# ffmpeg -stream_loop -1 -i video/first_loop_test.mp4 -i audio/Ketsa_Happy_Chappy.mp3 -map 0:v -map 1:a -c:v copy -c:a copy -strict -2 -flags +global_header -bufsize 2100k -f flv rtmp://x.rtmp.youtube.com/live2/{KEY}
+# ffmpeg -stream_loop -1 -re -i video/base_radio_file.mp4 -loglevel warning -c:v libx264 -b:v 2M -c:a copy -strict -2 -flags +global_header -bsf:a aac_adtstoasc -bufsize 2100k -f flv ' + YOUTUBE_URL + YT_KEY
+# ffmpeg -stream_loop -1 -re -i video/base_radio_file.mp4 -stream_loop -1 -re -f concat -i audio_input_list.txt -map 0:v -map 1:a -c:v libx264 -vf format=yuv420p -b:v 2M -bufsize 4M -maxrate 2M -g 50 -c:a aac -b:a 128k -flags +global_header rtmp://x.rtmp.youtube.com/live2/
 
 def get_key_from_cla(argv):
     global YT_KEY
@@ -57,7 +57,7 @@ def main_stream():
     logger.warning('Starting stream at: ' + dt.datetime.now().strftime('%H:%M:%S'))
     get_key_from_cla(sys.argv)
     
-    stream_cmd = 'ffmpeg -stream_loop -1 -re -i video/base_radio_file.mp4 -loglevel warning -c:v libx264 -b:v 2M -c:a copy -strict -2 -flags +global_header -bsf:a aac_adtstoasc -bufsize 2100k -f flv ' + YOUTUBE_URL + YT_KEY
+    stream_cmd = 'ffmpeg' + STREAM_SOURCES + STREAM_CONFIG + YOUTUBE_URL + YT_KEY
     stream_pipe = subprocess.Popen(stream_cmd, shell=True, stdin=subprocess.PIPE)
    
     try:
