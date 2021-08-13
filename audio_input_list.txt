@@ -1,5 +1,5 @@
 ffconcat version 1.0
-file 'Corty _Darkophonie_Part_6.mp3'
+file 'Corty_Darkophonie_Part_6.mp3'
 file 'audio/Dava_Drinking_Song_[Recycled].mp3'
 file 'audio/DJ_Rastacore_Legal_(Jungle_remix).mp3'
 file 'audio/Dub_Terminator_Dope_magnets.mp3'
