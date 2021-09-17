@@ -19,17 +19,10 @@ LOGS_FILE_PATH = LOGS_FOLDER_PATH + 'cn360_liveradio.log'
 YOUTUBE_URL = 'rtmp://x.rtmp.youtube.com/live2/'
 YT_KEY = ''
 
-STREAM_SOURCES = ' -stream_loop -1 -re -i video/base_radio_file.mp4 -stream_loop -1 -re -f concat -i audio_input_list.txt '
-STREAM_CONFIG = ' -map 0:v -map 1:a -c:v libx264 -vf format=yuv420p -b:v 2M -bufsize 4M -maxrate 2M -g 50 -c:a aac -b:a 128k -flags +global_header '
-
-H_SIZE = 1920
-V_SIZE = 1080
-FRAME_RATE = 25
-BITRATE = 4500000
+STREAM_SOURCES = ' -stream_loop -1 -re -i video/radiocannabis-loop_24fps.mp4 -f concat -i audio_input_list.txt '
+STREAM_CONFIG = ' -map 0:v -map 1:a -pix_fmt yuv420p -b:a 128k -ar 44100 -acodec aac -vcodec libx264 -preset superfast -g 12 -bf 2 -bufsize 4400k -threads 4 -f flv '
 
 # python3 liveradio_script_starter.py [YT_KEY]
-# ffmpeg -stream_loop -1 -re -i video/base_radio_file.mp4 -loglevel warning -c:v libx264 -b:v 2M -c:a copy -strict -2 -flags +global_header -bsf:a aac_adtstoasc -bufsize 2100k -f flv ' + YOUTUBE_URL + YT_KEY
-# ffmpeg -stream_loop -1 -re -i video/loop1_1080_muted.mp4 -re -f concat -i audio_input_list.txt -map 0:v -map 1:a -r 24 -g 48 -pix_fmt yuv420p -s 1440x1080 -b:v 1500k -b:a 128k -ar 44100 -acodec aac -vcodec libx264 -preset superfast -bufsize 960k -crf 28 -threads 2 -f flv rtmp://x.rtmp.youtube.com/live2/
 
 def get_key_from_cla(argv):
     global YT_KEY
