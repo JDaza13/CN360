@@ -19,10 +19,12 @@ LOGS_FILE_PATH = LOGS_FOLDER_PATH + 'cn360_liveradio.log'
 YOUTUBE_URL = 'rtmp://x.rtmp.youtube.com/live2/'
 YT_KEY = ''
 
-STREAM_SOURCES = ' -stream_loop -1 -re -i video/radiocannabis-loop_24fps.mp4 -f concat -i audio_input_list.txt '
-STREAM_CONFIG = ' -map 0:v -map 1:a -pix_fmt yuv420p -b:a 128k -ar 44100 -acodec aac -vcodec libx264 -preset superfast -movflags +faststart -crf 18 -g 12 -bf 2 -threads 2 -f flv '
+STREAM_SOURCES = ' -stream_loop -1 -re -i video/radiocannabis-loop_24fps.mp4 -re -f concat -i audio_input_list.txt '
+STREAM_CONFIG = ' -map 0:v -map 1:a -pix_fmt yuv420p -b:a 128k -acodec aac -vcodec libx264 -preset superfast -g 12 -bf 2 -bufsize 1M -f flv '
 
 # python3 liveradio_script_starter.py [YT_KEY]
+
+# ffmpeg -stream_loop -1 -re -i video/radiocannabis-loop_24fps.mp4 -re -f concat -i audio_input_list.txt -map 0:v -map 1:a -pix_fmt yuv420p -b:a 128k -acodec aac -vcodec libx264 -preset superfast -g 12 -bf 2 -bufsize 1M -f flv rtmp://x.rtmp.youtube.com/live2/apaq-de5a-6k5x-2pta-0f8t
 
 def get_key_from_cla(argv):
     global YT_KEY
