@@ -20,7 +20,7 @@ YOUTUBE_URL = 'rtmp://x.rtmp.youtube.com/live2/'
 YT_KEY = ''
 
 STREAM_SOURCES = ' -stream_loop -1 -re -i video/radiocannabis-loop_24fps.mp4 -f concat -i audio_input_list.txt '
-STREAM_CONFIG = ' -map 0:v -map 1:a -pix_fmt yuv420p -b:a 128k -ar 44100 -acodec aac -vcodec libx264 -preset superfast -g 12 -bf 2 -threads 2 -f flv '
+STREAM_CONFIG = ' -map 0:v -map 1:a -pix_fmt yuv420p -b:a 128k -ar 44100 -acodec aac -vcodec libx264 -preset superfast -movflags +faststart -crf 18 -g 12 -bf 2 -threads 2 -f flv '
 
 # python3 liveradio_script_starter.py [YT_KEY]
 
